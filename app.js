@@ -532,6 +532,29 @@ async function checkUserLevel(mobileNumber) {
 
 // Function to check and add vehicle number and phone number to the database
 
+// async function sendWhatsAppMessage(to, text, language) {
+//   const languages = {
+//     en: "en_US",
+//     hi: "hi_IN",
+//     gu: "gu_IN",
+//   };
+//   const selectedLanguage = languages[language] || "en_US";
+//   await axios.post(
+//     "https://whatsapp.jaimik.com/api/7975c527-78b1-4339-ba64-76b3315a38d4/contact/send-message",
+//     {
+//       messaging_product: "whatsapp",
+//       phone_number: to,
+//       message_body: text,
+//       language: { code: selectedLanguage },
+//     },
+//     {
+//       headers: {
+//         Authorization: `Bearer vdOBq2F0LlMWwO9MR4Bf8eudGcxSN5OohDmxt39P`,
+//       },
+//     }
+//   );
+// }
+
 async function sendWhatsAppMessage(to, text, language) {
   const languages = {
     en: "en_US",
@@ -540,20 +563,17 @@ async function sendWhatsAppMessage(to, text, language) {
   };
   const selectedLanguage = languages[language] || "en_US";
   await axios.post(
-    "https://whatsapp.jaimik.com/api/7975c527-78b1-4339-ba64-76b3315a38d4/contact/send-message",
+    WHATSAPP_API_URL,
     {
       messaging_product: "whatsapp",
-      phone_number: to,
-      message_body: text,
+      to,
+      text: { body: text },
       language: { code: selectedLanguage },
     },
-    {
-      headers: {
-        Authorization: `Bearer vdOBq2F0LlMWwO9MR4Bf8eudGcxSN5OohDmxt39P`,
-      },
-    }
+    { headers: { Authorization: `Bearer ${ACCESS_TOKEN}` } }
   );
 }
+
 
 async function checkAndAddVehicleToDB(vehicleNumber, phoneNumber) {
   try {
