@@ -57,9 +57,6 @@ function resetUserState(from) {
 }
 
 app.post("/webhook", async (req, res) => {
-  const app = express();
-  app.use(bodyParser.json());
-
   console.log(JSON.stringify(req.body, null, 2));
   const messages = req.body.entry[0].changes[0].value.messages;
   if (!messages || messages.length === 0) return res.sendStatus(200);
@@ -170,33 +167,11 @@ app.post("/webhook", async (req, res) => {
         }
       } else {
         var userlevel = await checkUserLevel(phoneNumber);
-        //user level check
         if (userlevel.user_level) {
           userState.vehicleNumber = formattedVehicleNumber;
           userState.imei = response.data[0].deviceid;
           userState.agency = response.data[0].agency;
           userState.subagency = response.data[0].subagency;
-          // if (
-          //   userState.subagency == "GaneshAtlanta" ||
-          //   userState.subagency == "MARUTI"
-          // ) {
-          //   resetUserState(from);
-          //   await sendWhatsAppMessage(
-          //     from,
-          //     "Subagency is restricted. For better service, please contact 88662 65662 on WhatsApp.",
-          //     "en"
-          //   );
-          //   await sendWhatsAppMessage(
-          //     from,
-          //     "सब एजेंसी प्रतिबंधित है। बेहतर सेवा के लिए कृपया 88662 65662 पर WhatsApp पर संपर्क करें।",
-          //     "hi"
-          //   );
-          //   await sendWhatsAppMessage(
-          //     from,
-          //     "સબએજન્સી પ્રતિબંધિત છે. વધુ સારી સેવા માટે, કૃપા કરીને WhatsApp પર 88662 65662 પર સંપર્ક કરો.",
-          //     "gu"
-          //   );
-          // } else {
           await sendInteractiveMessage(from, [
             formattedVehicleNumber,
             response.data[0].lattitude,
@@ -206,9 +181,7 @@ app.post("/webhook", async (req, res) => {
             response.data[0].servertime,
           ]);
           userState.step = 2;
-          // }
         } else {
-          //
           var result = await weekCheck(
             formattedVehicleNumber,
             phoneNumber,
@@ -220,27 +193,7 @@ app.post("/webhook", async (req, res) => {
             userState.imei = response.data[0].deviceid;
             userState.agency = response.data[0].agency;
             userState.subagency = response.data[0].subagency;
-            // if (
-            //   userState.subagency == "GaneshAtlanta" ||
-            //   userState.subagency == "MARUTI"
-            // ) {
-            //   resetUserState(from);
-            //   await sendWhatsAppMessage(
-            //     from,
-            //     "Subagency is restricted. For better service, please contact 88662 65662 on WhatsApp.",
-            //     "en"
-            //   );
-            //   await sendWhatsAppMessage(
-            //     from,
-            //     "सब एजेंसी प्रतिबंधित है। बेहतर सेवा के लिए कृपया 88662 65662 पर WhatsApp पर संपर्क करें।",
-            //     "hi"
-            //   );
-            //   await sendWhatsAppMessage(
-            //     from,
-            //     "સબએજન્સી પ્રતિબંધિત છે. વધુ સારી સેવા માટે, કૃપા કરીને WhatsApp પર 88662 65662 પર સંપર્ક કરો.",
-            //     "gu"
-            //   );
-            // } else {
+
             await sendInteractiveMessage(from, [
               formattedVehicleNumber,
               response.data[0].lattitude,
@@ -250,7 +203,6 @@ app.post("/webhook", async (req, res) => {
               response.data[0].servertime,
             ]);
             userState.step = 2;
-            // }
           } else {
             resetUserState(from);
             await sendWhatsAppMessage(
